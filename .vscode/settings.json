@@ -1,0 +1,5 @@
+{
+  "purescript.addNpmPath": true,
+  "purescript.addSpagoSources": true,
+  "purescript.formatter": "purs-tidy"
+}

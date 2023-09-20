@@ -1,0 +1,19 @@
+{
+  "name": "purescript-free-repo-example",
+  "type": "module",
+  "dependencies": {
+    "purescript": "^0.15.10",
+    "spago": "^0.21.0",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "purs-tidy": "^0.10.0",
+    "serve": "^14.2.1"
+  },
+  "scripts": {
+    "start": "spago run",
+    "test": "spago test",
+    "format": "purs-tidy format-in-place ./src ./test",
+    "docs": "spago docs --no-search -o"
+  }
+}
