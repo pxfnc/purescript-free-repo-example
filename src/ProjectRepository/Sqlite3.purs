@@ -19,7 +19,7 @@ import Database.SQLite3 as Sqlite3
 import Effect.Aff (Aff, Error, error)
 import Effect.Aff.Class (class MonadAff)
 import Foreign (ForeignError, renderForeignError)
-import Project (ProjectErrors, ProjectId(..), unwrapProject, validateProject)
+import Project (ProjectErrors, ProjectId(..), mkProject, unwrapProject)
 import ProjectRepository (ProjectRepositoryDSL, ProjectRepositoryF(..))
 import Simple.JSON (read, write)
 
@@ -40,7 +40,7 @@ interpret = foldFree case _ of
   GetProjectById id next -> do
     result <- Sqlite3.get "SELECT id, title, goal_price as goalPrice from projects where id = ?" [ write id ]
     maybeRecord <- liftEither <<< lmap fromForeignError $ read result
-    maybeProject <- liftEither <<< lmap fromProjectErrors <<< toEither <<< traverse validateProject $ maybeRecord
+    maybeProject <- liftEither <<< lmap fromProjectErrors <<< traverse mkProject $ maybeRecord
     pure $ next maybeProject
 
   SaveProject project next -> do

@@ -29,6 +29,7 @@ to generate this file without the comments in this block.
   , "quickcheck"
   , "simple-json"
   , "strings"
+  , "test-unit"
   , "transformers"
   , "tuples"
   , "uuidv4"

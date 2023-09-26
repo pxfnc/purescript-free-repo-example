@@ -3,17 +3,17 @@ module Project
   , ProjectErrors
   , ProjectId(..)
   , unwrapProject
-  , validateProject
-  , validateTitle
+  , mkProject
   ) where
 
 import Prelude
 
+import Data.Either (Either)
 import Data.Maybe (Maybe(..))
 import Data.String as String
 import Data.UUID.Random (UUIDv4)
 import Data.UUID.Random as UUIDv4
-import Data.Validation.Semigroup (V, invalid, isValid)
+import Data.Validation.Semigroup (V, invalid, isValid, toEither)
 import Foreign (ForeignError(..), fail)
 import Simple.JSON (class ReadForeign, class WriteForeign, readImpl, writeImpl)
 import Test.QuickCheck (class Arbitrary, arbitrary)
@@ -25,6 +25,8 @@ newtype Project = UnsafeMakeProject
   , title :: String
   , goalPrice :: Int
   }
+
+derive newtype instance eqProject :: Eq Project
 
 instance showProject :: Show Project where
   show (UnsafeMakeProject p) = show p
@@ -78,6 +80,14 @@ validateProject r = map UnsafeMakeProject $
   { id: r.id, title: _, goalPrice: _ }
     <$> validateTitle r.title
     <*> validateGoalPrice r.goalPrice
+
+mkProject
+  :: { id :: ProjectId
+     , title :: String
+     , goalPrice :: Int
+     }
+  -> Either ProjectErrors Project
+mkProject = validateProject >>> toEither
 
 -- | タイトルのバリデーション
 validateTitle :: String -> V ProjectErrors String
